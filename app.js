@@ -1,3 +1,4 @@
+
 const express = require("express")
 const cors = require("cors")
 const app = express()
@@ -10,6 +11,8 @@ const io = new Server(server, {
   }
 });
 
+var port = 3000;
+
 
 app.use(cors())
 app.use(express.json())
@@ -21,10 +24,20 @@ io.on('connection', (socket) => {
     console.log(message);
     socket.broadcast.emit('message',message)
   })
+
+
+  socket.on('mouseMove', (position) => {
+    socket.broadcast.emit('mouseMove', position);
+  });
+
+
+  socket.on('disconnect', () => {
+    console.log('A user disconnected');
+  })
   
 });
-server.listen(3000, () => {
-  console.log(`Server listening 3000`);
+server.listen(port, () => {
+  console.log(`Server listening ${port}`);
 });
 
 app.get('/', (req, res) => {
